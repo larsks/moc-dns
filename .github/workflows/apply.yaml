@@ -41,12 +41,12 @@ jobs:
       - name: Update zones
         run: |
           set -e
+          # Get a list of zonefiles with changes and apply them.
           (
             git diff-tree --no-commit-id --diff-filter=ACRM --name-only -r HEAD^ HEAD -- '*.zone' ||
             git diff-tree --no-commit-id --diff-filter=ACRM --name-only -r --root HEAD -- '*.zone'
           ) | while read zonefile; do
             zone=${zonefile##*/}
             zone=${zone%.zone}
-            $HOME/bin/cli53 import --replace -n --file $zonefile $zone &&
-              $HOME/bin/cli53 import --replace --file $zonefile $zone
+            $HOME/bin/cli53 import --replace --file $zonefile $zone
           done
